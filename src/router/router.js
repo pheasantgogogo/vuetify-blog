@@ -1,5 +1,6 @@
 import Router from 'vue-router'
 import vue from 'vue'
+import content from '../views/content.vue'
 
 vue.use(Router)
 
@@ -13,7 +14,7 @@ export default new Router({
     },
     {
       path: '/content',
-      component: () => import('../views/content.vue')
+      component: content
     },
     {
       path: '/tags',
@@ -22,6 +23,10 @@ export default new Router({
     {
       path: '/archives',
       component: () => import('../views/archives.vue')
+    },
+    {
+      path: '/content/edit',
+      component: () => import('../views/edit.vue')
     }
   ]
 })
