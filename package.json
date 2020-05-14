@@ -24,6 +24,7 @@
     "koa2-connect-history-api-fallback": "^0.1.2",
     "koa2-cors": "^2.0.6",
     "mysql2": "^2.1.0",
+    "node-uuid": "^1.4.8",
     "nprogress": "^0.2.0",
     "sequelize": "^5.21.8",
     "tinymce": "^5.2.2",

@@ -4,18 +4,19 @@ const Koa = require('koa')
 const jwt = require('jsonwebtoken')
 const koajwt = require('koa-jwt')
 // const WebSocketServer = WebSocket.Server
-// const path = require('path')
+const path = require('path')
 const app = new Koa()
 const bodyParser = require('koa-bodyparser')
 const { historyApiFallback } = require('koa2-connect-history-api-fallback')
-// const static = require('koa-static')
+const static = require('koa-static')
 const cors = require('koa2-cors')
 const router = require('koa-router')()
 const compress = require('koa-compress')
-// const http = require('http')
-// const https = require('https')
-// const fs = require('fs')
-// const enforceHttps = require('koa-sslify').default
+const uuid = require('node-uuid')
+const http = require('http')
+const https = require('https')
+const fs = require('fs')
+const enforceHttps = require('koa-sslify').default
 const options = {
   threshold: 2048
 }
@@ -53,7 +54,7 @@ app.use(
   koajwt({
     secret: 'wlh_token'
   }).unless({
-    path: [/\/login/, /\/register/]
+    path: [/\/login/, /\/register/, /\/postBlog/, /\//]
   })
 )
 app.use(historyApiFallback({ whiteList: ['/api'] }))
@@ -119,10 +120,13 @@ var Blog = sequelize.define(
   'blog',
   {
     id: {
-      type: Sequelize.STRING(11),
+      type: Sequelize.STRING(20),
       primaryKey: true
     },
-    content: Sequelize.STRING(65536)
+    content: Sequelize.STRING(65536),
+    title: Sequelize.STRING(255),
+    createAt: Sequelize.NUMBER(20),
+    updateAt: Sequelize.NUMBER(20)
   },
   {
     timestamps: false,
@@ -150,7 +154,7 @@ router.get('/getBlog', async (ctx, next) => {
     ctx.response.type = 'application/json'
     ctx.response.body = {
       result: true,
-      data: res[res.length - 1]
+      data: res
     }
   })
 })
@@ -171,8 +175,13 @@ router.post('/postData', async (ctx, next) => {
 })
 
 router.post('/postBlog', async (ctx, next) => {
+  console.log(new Date().getTime())
   await Blog.create({
-    content: ctx.request.body.content
+    id: uuid.v1(),
+    title: ctx.request.body.title,
+    content: ctx.request.body.content,
+    createAt: new Date().getTime(),
+    updateAt: new Date().getTime()
   }).then(res => {
     ctx.response.type = 'application/json'
     ctx.response.body = {
