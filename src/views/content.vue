@@ -1,5 +1,5 @@
 <template>
-  <div v-highlight>
+  <div>
     <v-row>
       <v-col cols="12">
         <v-text-field label="标题" outlined v-model="title" :rules="[rules.required]"></v-text-field>

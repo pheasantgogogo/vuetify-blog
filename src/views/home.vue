@@ -1,11 +1,9 @@
 <template>
-  <div class="hello" v-highlight>
-    <ul>
-      <li v-for="i in list" :key="i.id">
-        <h3>{{i.title}}</h3>
-        <div v-html="i.content"></div>
-      </li>
-    </ul>
+  <div class="hello">
+    <v-card v-for="i in list" :key="i.id">
+      <v-card-title @click="$router.push({path:`/edit/${i.id}`})">{{i.title}}</v-card-title>
+      <v-card-text v-html="i.content"></v-card-text>
+    </v-card>
   </div>
 </template>
 

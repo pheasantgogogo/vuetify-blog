@@ -4,6 +4,7 @@ const Koa = require('koa')
 const jwt = require('jsonwebtoken')
 const koajwt = require('koa-jwt')
 // const WebSocketServer = WebSocket.Server
+const urlSplit = require('../utils/urlSplit')
 const path = require('path')
 const app = new Koa()
 const bodyParser = require('koa-bodyparser')
@@ -27,7 +28,7 @@ const options = {
 app.use(
   cors({
     origin: function(ctx) {
-      return 'http://localhost:8080' // 只允许http://localhost:8080这个域名的请求
+      return '*' // 只允许http://localhost:8080这个域名的请求
     },
     maxAge: 5, // 指定本次预检请求的有效期，单位为秒。
     credentials: true, // 是否允许发送Cookie
@@ -155,6 +156,18 @@ router.get('/getBlog', async (ctx, next) => {
     ctx.response.body = {
       result: true,
       data: res
+    }
+  })
+})
+
+router.get('/getSingleBlog', async (ctx, next) => {
+  await Blog.findAll({
+    where: urlSplit(ctx.request.url)
+  }).then(res => {
+    ctx.response.type = 'application/json'
+    ctx.response.body = {
+      result: true,
+      data: res[0]
     }
   })
 })

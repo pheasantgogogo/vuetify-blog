@@ -1,7 +1,10 @@
 import axios from 'axios'
 import Qs from 'qs'
 
-axios.defaults.baseUrl = process.env.NODE_ENV === 'production' ? 'https://wangluhong.cn' : 'http://localhost:3000'
+axios.defaults.baseUrl =
+  process.env.NODE_ENV === 'production'
+    ? 'https://wangluhong.cn'
+    : 'http://localhost:3000'
 axios.defaults.timeout = 60000
 axios.defaults.withCredentials = true
 axios.interceptors.request.use(config => {
@@ -10,12 +13,7 @@ axios.interceptors.request.use(config => {
   return config
 })
 
-
-export default function request({
-  method,
-  url,
-  params
-}) {
+export default function request({ method, url, params }) {
   if (method === 'Get') {
     return get(url, params)
   }
@@ -26,22 +24,31 @@ export default function request({
 
 function get(url, params) {
   return new Promise((resolve, reject) => {
-    axios.get(url, params).then(res => {
-      resolve(res.data)
-    }).catch(err => {
-      reject(err)
-    })
+    axios
+      .get(url, params)
+      .then(res => {
+        resolve(res.data)
+      })
+      .catch(err => {
+        reject(err)
+      })
   })
 }
 
 function post(url, params) {
   return new Promise((resolve, reject) => {
-    axios.post(url, Qs.stringify(params, {
-      arrayFormat: 'brackets'
-    })).then(res => {
-      resolve(res.data)
-    }).catch(err => {
-      reject(err)
-    })
+    axios
+      .post(
+        url,
+        Qs.stringify(params, {
+          arrayFormat: 'brackets'
+        })
+      )
+      .then(res => {
+        resolve(res.data)
+      })
+      .catch(err => {
+        reject(err)
+      })
   })
 }

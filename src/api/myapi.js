@@ -8,10 +8,19 @@ export function getBlogList(params) {
     params: params
   })
 }
+
 export function postBlog(params) {
   return request({
     method: 'Post',
     url: currentUrl + '/postBlog',
+    params: params
+  })
+}
+
+export function getSingleBlog(params) {
+  return request({
+    method: 'Get',
+    url: currentUrl + '/getSingleBlog',
     params: params
   })
 }
