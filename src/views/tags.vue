@@ -1,6 +1,7 @@
 <template>
   <div>
-    这是tags页面
+    <p>{{msg}}</p>
+    <p>{{websocket}}</p>
   </div>
 </template>
 
@@ -33,6 +34,10 @@ export default {
     //     this.$Message.error('请输入信息')
     //   }
     // }
+  },
+  mounted() {
+    this.msg = window.innerWidth
+    this.websocket = window.devicePixelRatio
   }
 }
 </script>

@@ -25,7 +25,11 @@ export default {
       }
     }).then(res => {
       if (res.result) {
-        this.text = res.data.content.replace('<pre class="', '<pre class="line-numbers ') // 加上line-numbers类，让prism的行数插件识别
+        if (innerWidth > 960) {
+          this.text = res.data.content.replace('<pre class="', '<pre class="line-numbers ') // 加上line-numbers类，让prism的行数插件识别
+        } else {
+          this.text = res.data.content
+        }
         this.$nextTick(() => {
           Prism.highlightAll()
         })
