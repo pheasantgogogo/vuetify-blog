@@ -8,7 +8,7 @@ axios.defaults.baseUrl =
 axios.defaults.timeout = 60000
 axios.defaults.withCredentials = true
 axios.interceptors.request.use(config => {
-  const token = window.sessionStorage.getItem('token')
+  const token = window.localStorage.getItem('token')
   config.headers.common.Authorization = 'Bearer ' + token
   return config
 })

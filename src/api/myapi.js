@@ -24,3 +24,19 @@ export function getSingleBlog(params) {
     params: params
   })
 }
+
+export function login(params) {
+  return request({
+    method: 'Post',
+    url: currentUrl + '/login',
+    params: params
+  })
+}
+
+export function register(params) {
+  return request({
+    method: 'Post',
+    url: currentUrl + '/register',
+    params: params
+  })
+}

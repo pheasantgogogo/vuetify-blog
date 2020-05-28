@@ -3,10 +3,7 @@
     <v-form v-model="valid">
       <v-container>
         <v-row>
-          <v-col
-            cols="12"
-            md="12"
-          >
+          <v-col cols="12" md="12">
             <v-text-field
               v-model="form.account"
               :counter="16"
@@ -16,10 +13,7 @@
               @keyup.enter.native="userLogin"
             ></v-text-field>
           </v-col>
-          <v-col
-            cols="12"
-            md="12"
-          >
+          <v-col cols="12" md="12">
             <v-text-field
               v-model="form.password"
               :counter="16"
@@ -30,11 +24,7 @@
               @keyup.enter.native="userLogin"
             ></v-text-field>
           </v-col>
-           <v-col
-            cols="12"
-            md="12"
-            v-if="!login"
-          >
+          <v-col cols="12" md="12" v-if="!login">
             <v-text-field
               v-model="form.confirmPassword"
               :counter="16"
@@ -56,7 +46,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import { login, register } from '../api/myapi'
 
 export default {
   name: 'archives',
@@ -76,42 +66,16 @@ export default {
     test() {
     },
     userLogin() {
-      axios
-        .post('http://localhost:3000/login', {
-          account: this.form.account,
-          password: this.form.password
-        })
-        .then(res => {
-          if (res.data.result) {
-            window.sessionStorage.setItem('token', res.data.token)
-            this.$router.push({ path: '/user' })
-          } else {
-            this.$Message.error(res.data.reason)
-          }
-        })
-        .catch(err => {
-          console.log(err)
-        })
+      login({
+        account: this.form.account,
+        password: this.form.password
+      }).then(res => {
+        if (res.result) {
+          window.localStorage.setItem('token', res.token)
+        }
+      })
     },
     register() {
-      if (this.form.password === this.form.confirmPassword) {
-        axios.post('http://localhost:3000/register', {
-          account: this.form.account,
-          password: this.form.password
-        }).then(res => {
-          if (res.data.result) {
-            this.$Message.success('注册成功')
-            this.login = true
-            this.form.account = this.form.password = this.form.confirmPassword = ''
-          } else {
-            this.$Message.error(res.data.reason)
-          }
-        }).catch(err => {
-          console.log(err)
-        })
-      } else {
-        this.$Message.error('两次密码不正确')
-      }
     }
   }
 }
