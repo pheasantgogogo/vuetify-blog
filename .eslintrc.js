@@ -16,7 +16,6 @@ module.exports = {
     // `plugin:vue/recommended` for stricter rules.
     'plugin:vue/essential',
     // https://github.com/standard/standard/blob/master/docs/RULES-en.md
-    'standard'
   ],
   rules: {
     // allow async-await
