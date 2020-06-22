@@ -18,7 +18,7 @@
 
 <script>
 import tinymce from 'tinymce/tinymce'
-import Editor from '@tinymce/tinymce-vue'
+import Editor from '@tinymce/tinymce-vue' // 测试
 import 'tinymce/themes/silver'
 import 'tinymce/plugins/image' // 插入上传图片插件
 import 'tinymce/plugins/emoticons' // 插入上传图片插件
