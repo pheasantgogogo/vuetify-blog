@@ -27,7 +27,7 @@ const options = {
 // }
 app.use(
   cors({
-    origin: function(ctx) {
+    origin: function (ctx) {
       return 'http://localhost:8080' // 只允许http://localhost:8080这个域名的请求
     },
     maxAge: 5, // 指定本次预检请求的有效期，单位为秒。
@@ -55,7 +55,7 @@ app.use(
   koajwt({
     secret: 'wlh_token'
   }).unless({
-    path: [/\/login/, /\/register/, /\/postBlog/, /\//]
+    path: [/\/login/, /\/register/, /\//]
   })
 )
 app.use(historyApiFallback({ whiteList: ['/api'] }))
@@ -98,6 +98,38 @@ var Test = sequelize.define(
   },
   {
     timestamps: false
+  }
+)
+
+var Statistics = sequelize.define(
+  'immortal',
+  {
+    id: {
+      type: Sequelize.STRING(3),
+      primaryKey: true
+    },
+    name: Sequelize.STRING(255),
+    position: Sequelize.DOUBLE(2),
+    myth: Sequelize.DOUBLE(1),
+  },
+  {
+    timestamps: false,
+    freezeTableName: true
+  }
+)
+
+var UserName = sequelize.define(
+  'username',
+  {
+    id: {
+      type: Sequelize.STRING(2),
+      primaryKey: true
+    },
+    name: Sequelize.STRING(255)
+  },
+  {
+    timestamps: false,
+    freezeTableName: true
   }
 )
 
@@ -160,6 +192,27 @@ router.get('/getBlog', async (ctx, next) => {
   })
 })
 
+router.get('/getUserList', async (ctx, next) => {
+  await UserName.findAll().then(res => {
+    ctx.response.type = 'application/json'
+    ctx.response.body = {
+      result: true,
+      data: res
+    }
+  })
+})
+
+router.post('/addUser', async (ctx, next) => {
+  await UserName.create({
+    name: ctx.request.body.name
+  }).then(res => {
+    ctx.response.type = 'application/json'
+    ctx.response.body = {
+      result: true
+    }
+  })
+})
+
 router.get('/getSingleBlog', async (ctx, next) => {
   await Blog.findAll({
     where: urlSplit(ctx.request.url)
@@ -188,7 +241,6 @@ router.post('/postData', async (ctx, next) => {
 })
 
 router.post('/postBlog', async (ctx, next) => {
-  console.log(new Date().getTime())
   await Blog.create({
     id: uuid.v1(),
     title: ctx.request.body.title,
@@ -203,9 +255,17 @@ router.post('/postBlog', async (ctx, next) => {
   })
 })
 
+router.get('/getItemList', async (ctx, next) => {
+  await Statistics.findAll().then(res => {
+    ctx.response.type = 'application/json'
+    ctx.response.body = {
+      result: true,
+      data: res
+    }
+  })
+})
+
 router.post('/login', async (ctx, next) => {
-  console.log(1)
-  // var params = urlSplit(ctx.request.url)
   var response = await User.findAll({
     where: {
       account: ctx.request.body.account

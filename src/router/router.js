@@ -31,6 +31,10 @@ export default new Router({
     {
       path: '/edit/:id',
       component: () => import('../views/edit.vue')
+    },
+    {
+      path: '/statistics',
+      component: () => import('../views/statistics.vue')
     }
   ]
 })

@@ -40,3 +40,27 @@ export function register(params) {
     params: params
   })
 }
+
+export function getItemList(params) {
+  return request({
+    method: 'Get',
+    url: currentUrl + '/getItemList',
+    params: params
+  })
+}
+
+export function addUser(params) {
+  return request({
+    method: 'Post',
+    url: currentUrl + '/addUser',
+    params: params
+  })
+}
+
+export function getUserList(params) {
+  return request({
+    method: 'Get',
+    url: currentUrl + '/getUserList',
+    params: params
+  })
+}
