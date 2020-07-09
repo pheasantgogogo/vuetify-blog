@@ -43,7 +43,7 @@
             </v-list-item-icon>
             <v-list-item-title>content</v-list-item-title>
           </v-list-item>
-          <v-list-item link to="/statistics">
+          <v-list-item link to="/kuangbaoshan">
             <v-list-item-icon>
               <v-icon>mdi-star</v-icon>
             </v-list-item-icon>

@@ -64,3 +64,19 @@ export function getUserList(params) {
     params: params
   })
 }
+
+export function addShiningList(params) {
+  return request({
+    method: 'Post',
+    url: currentUrl + '/addShiningList',
+    params: params
+  })
+}
+
+export function getShiningList(params) {
+  return request({
+    method: 'Get',
+    url: currentUrl + '/getShiningList',
+    params: params
+  })
+}

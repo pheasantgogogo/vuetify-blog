@@ -33,7 +33,7 @@ export default new Router({
       component: () => import('../views/edit.vue')
     },
     {
-      path: '/statistics',
+      path: '/kuangbaoshan',
       component: () => import('../views/statistics.vue')
     }
   ]

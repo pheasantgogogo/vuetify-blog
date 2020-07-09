@@ -118,6 +118,27 @@ var Statistics = sequelize.define(
   }
 )
 
+var shining = sequelize.define(
+  'statistics',
+  {
+    id: {
+      type: Sequelize.STRING(3),
+      primaryKey: true
+    },
+    userId: Sequelize.DOUBLE(2),
+    number: Sequelize.DOUBLE(2),
+    immortals: Sequelize.STRING(255),
+    twotwo: Sequelize.STRING(255),
+    time: Sequelize.STRING(255),
+    store: Sequelize.DOUBLE(2),
+    souls: Sequelize.DOUBLE(2)
+  },
+  {
+    timestamps: false,
+    freezeTableName: true
+  }
+)
+
 var UserName = sequelize.define(
   'username',
   {
@@ -142,6 +163,22 @@ var User = sequelize.define(
     },
     account: Sequelize.STRING(255),
     password: Sequelize.STRING(255)
+  },
+  {
+    timestamps: false,
+    freezeTableName: true
+  }
+)
+
+var item_position = sequelize.define(
+  'item-position',
+  {
+    id: {
+      type: Sequelize.STRING(11),
+      primaryKey: true
+    },
+    position: Sequelize.STRING(255),
+    color: Sequelize.STRING(255)
   },
   {
     timestamps: false,
@@ -213,6 +250,44 @@ router.post('/addUser', async (ctx, next) => {
   })
 })
 
+router.post('/addShiningList', async (ctx, next) => {
+  await shining.create({
+    userId: ctx.request.body.userId,
+    number: ctx.request.body.number,
+    immortals: ctx.request.body.immortals,
+    time: ctx.request.body.time,
+    souls: ctx.request.body.souls,
+    store: ctx.request.body.store,
+    twotwo: ctx.request.body.twotwo
+  }).then(res => {
+    ctx.response.type = 'application/json'
+    ctx.response.body = {
+      result: true
+    }
+  })
+})
+
+router.get('/getShiningList', async (ctx, next) => {
+  let data = null
+  await shining.findAll().then(res => {
+    data = JSON.parse(JSON.stringify(res))
+  })
+  await UserName.findAll().then(res => {
+    for (let i = 0; i < data.length; i++) {
+      for (let j = 0; j < res.length; j++) {
+        if (data[i].userId === res[j].id) {
+          data[i].userName = res[j].name
+        }
+      }
+    }
+    ctx.response.type = 'application/json'
+    ctx.response.body = {
+      result: true,
+      data: data
+    }
+  })
+})
+
 router.get('/getSingleBlog', async (ctx, next) => {
   await Blog.findAll({
     where: urlSplit(ctx.request.url)
@@ -256,11 +331,22 @@ router.post('/postBlog', async (ctx, next) => {
 })
 
 router.get('/getItemList', async (ctx, next) => {
+  let data = null
   await Statistics.findAll().then(res => {
+    data = JSON.parse(JSON.stringify(res))
+  })
+  await item_position.findAll().then(res => {
+    for (let i = 0; i < data.length; i++) {
+      for (let j = 0; j < res.length; j++) {
+        if (data[i].position === res[j].id) {
+          data[i].color = res[j].color
+        }
+      }
+    }
     ctx.response.type = 'application/json'
     ctx.response.body = {
       result: true,
-      data: res
+      data: data
     }
   })
 })
