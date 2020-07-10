@@ -131,7 +131,8 @@ var shining = sequelize.define(
     twotwo: Sequelize.STRING(255),
     time: Sequelize.STRING(255),
     store: Sequelize.DOUBLE(2),
-    souls: Sequelize.DOUBLE(2)
+    souls: Sequelize.DOUBLE(2),
+    createdAt: Sequelize.STRING
   },
   {
     timestamps: false,
@@ -258,7 +259,8 @@ router.post('/addShiningList', async (ctx, next) => {
     time: ctx.request.body.time,
     souls: ctx.request.body.souls,
     store: ctx.request.body.store,
-    twotwo: ctx.request.body.twotwo
+    twotwo: ctx.request.body.twotwo,
+    createdAt: new Date().getTime()
   }).then(res => {
     ctx.response.type = 'application/json'
     ctx.response.body = {
@@ -269,7 +271,9 @@ router.post('/addShiningList', async (ctx, next) => {
 
 router.get('/getShiningList', async (ctx, next) => {
   let data = null
-  await shining.findAll().then(res => {
+  await shining.findAll({
+    order: [['time', 'DESC']]
+  }).then(res => {
     data = JSON.parse(JSON.stringify(res))
   })
   await UserName.findAll().then(res => {

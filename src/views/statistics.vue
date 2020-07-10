@@ -3,7 +3,7 @@
     <div style="display:inline-block;margin-right:15px">
       <v-dialog v-model="dialog1" width="500" persistent>
         <template v-slot:activator="{ on, attrs }">
-          <v-btn color="red lighten-2" dark v-bind="attrs" v-on="on">添加角色</v-btn>
+          <v-btn color="blue lighten-1" dark v-bind="attrs" v-on="on" rounded>添加角色</v-btn>
         </template>
 
         <v-card>
@@ -33,7 +33,7 @@
     <div style="display:inline-block">
       <v-dialog v-model="dialog2" width="500" persistent>
         <template v-slot:activator="{ on, attrs }">
-          <v-btn color="red lighten-2" dark v-bind="attrs" v-on="on">添加记录</v-btn>
+          <v-btn color="primary" dark v-bind="attrs" v-on="on" rounded>添加记录</v-btn>
         </template>
 
         <v-card>
@@ -145,29 +145,32 @@
     <v-data-table
       :headers="headers"
       :items="shiningList"
-      :items-per-page="20"
+      :items-per-page="15"
       class="elevation-1"
       style="margin-top:15px"
     >
       <template v-slot:item.immortals_text="{ item }">
-        <v-chip
-          v-for="i in item.immortals_text"
-          :key="i.name"
-          style="margin-right:5px"
-          :color="i.color"
-          text-color="white"
-        >{{i.name}}</v-chip>
+        <v-chip-group column>
+          <v-chip
+            v-for="i in item.immortals_text"
+            :key="i.name"
+            :color="i.color"
+            text-color="white"
+          >{{i.name}}</v-chip>
+        </v-chip-group>
       </template>
       <template v-slot:item.twotwo_text="{ item }">
-        <v-chip
-          v-for="i in item.twotwo_text"
-          :key="i.name"
-          style="margin-right:5px"
-          :color="i.color"
-          text-color="white"
-        >{{i.name}}</v-chip>
+        <v-chip-group column>
+          <v-chip
+            v-for="i in item.twotwo_text"
+            :key="i.name"
+            :color="i.color"
+            text-color="white"
+          >{{i.name}}</v-chip>
+        </v-chip-group>
       </template>
     </v-data-table>
+    <notifications></notifications>
   </div>
 </template>
 
@@ -210,12 +213,13 @@ export default {
         counter: value => Number.parseInt(value) >= 0 || '不合法的数字'
       },
       headers: [
-        { text: '日期', value: 'time' },
+        { text: '日期', value: 'time', width: 120 },
         {
           text: '角色',
           align: 'start',
           sortable: false,
-          value: 'userName'
+          value: 'userName',
+          width: 80
         },
         { text: '次数', value: 'number' },
         { text: '史诗灵魂', value: 'souls' },
@@ -226,6 +230,36 @@ export default {
     }
   },
   methods: {
+    getUserList() {
+      getUserList().then(res => {
+        if (res.result) {
+          this.userList = res.data
+        }
+      })
+    },
+    getShiningList() {
+      getShiningList().then(res => {
+        if (res.result) {
+          for (let i = 0; i < res.data.length; i++) {
+            res.data[i].immortals = JSON.parse(res.data[i].immortals)
+            res.data[i].twotwo = JSON.parse(res.data[i].twotwo)
+            res.data[i].immortals_text = []
+            res.data[i].twotwo_text = []
+            for (let j = 0; j < res.data[i].immortals.length; j++) {
+              res.data[i].immortals_text.push(
+                this.itemList.find(v => v.id === res.data[i].immortals[j])
+              )
+            }
+            for (let j = 0; j < res.data[i].twotwo.length; j++) {
+              res.data[i].twotwo_text.push(
+                this.itemList.find(v => v.id === res.data[i].twotwo[j])
+              )
+            }
+          }
+          this.shiningList = res.data
+        }
+      })
+    },
     resetDate() {
       this.userSelect = ''
       this.itemSelect = []
@@ -235,7 +269,6 @@ export default {
       this.userName = ''
       this.$refs.form.resetValidation()
     },
-    addUser() {},
     cancelAddUser() {
       this.dialog1 = false
       this.userName = ''
@@ -248,13 +281,27 @@ export default {
       this.loading1 = true
       addUser({
         name: this.userName
-      }).then(res => {
-        this.loading1 = false
-        this.dialog1 = false
-        if (res.result) {
-          this.resetDate()
-        }
       })
+        .then(res => {
+          this.loading1 = false
+          this.dialog1 = false
+          if (res.result) {
+            this.$notify({
+              title: '添加成功！',
+              message: '今天又是充满希望的一天！(ง •_•)ง',
+              type: 'success'
+            })
+            this.userName = ''
+            this.getUserList()
+          }
+        })
+        .catch(() => {
+          this.$notify({
+            title: '出错啦！',
+            message: '您没有权限这么做哦 (=´ω｀=)',
+            type: 'warning'
+          })
+        })
     },
     confirmAddList() {
       if (this.$refs.form.validate()) {
@@ -271,14 +318,25 @@ export default {
           .then(res => {
             this.loading2 = false
             if (res.result) {
+              this.$notify({
+                title: '添加成功！',
+                message: '今天又是充满希望的一天！(ง •_•)ง',
+                type: 'success'
+              })
               this.dialog2 = false
               this.resetDate()
               this.$refs.form.resetValidation()
+              this.getShiningList()
             }
           })
           .catch(err => {
             console.log(err)
             this.loading2 = false
+            this.$notify({
+              title: '出错啦！',
+              message: '您没有权限这么做哦 (=´ω｀=)',
+              type: 'warning'
+            })
           })
       }
     }
