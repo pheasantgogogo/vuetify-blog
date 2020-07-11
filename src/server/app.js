@@ -51,15 +51,15 @@ app.use(async (ctx, next) => {
     }
   })
 })
+app.use(historyApiFallback({ whiteList: ['/api'] }))
+// app.use(static(path.join(__dirname, '../dist')))
 app.use(
   koajwt({
     secret: 'wlh_token'
   }).unless({
-    path: [/\/login/, /\/register/, /\//]
+    path: [/\/login/, /\/register/, /\/getItemList/, /\/getShiningList/, /\/getUserList/]
   })
 )
-app.use(historyApiFallback({ whiteList: ['/api'] }))
-// app.use(static(path.join(__dirname, '../dist')))
 app.use(bodyParser())
 app.use(router.routes())
 const config = {
@@ -111,6 +111,7 @@ var Statistics = sequelize.define(
     name: Sequelize.STRING(255),
     position: Sequelize.DOUBLE(2),
     myth: Sequelize.DOUBLE(1),
+    description: Sequelize.STRING
   },
   {
     timestamps: false,
@@ -344,6 +345,7 @@ router.get('/getItemList', async (ctx, next) => {
       for (let j = 0; j < res.length; j++) {
         if (data[i].position === res[j].id) {
           data[i].color = res[j].color
+          data[i].position_text = res[j].position
         }
       }
     }

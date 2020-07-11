@@ -41,7 +41,7 @@
         </v-row>
       </v-container>
     </v-form>
-    <v-btn @click="test">测试测试</v-btn>
+    <notifications></notifications>
   </div>
 </template>
 
@@ -63,8 +63,7 @@ export default {
     }
   },
   methods: {
-    test() {
-    },
+    test() {},
     userLogin() {
       login({
         account: this.form.account,
@@ -72,11 +71,15 @@ export default {
       }).then(res => {
         if (res.result) {
           window.localStorage.setItem('token', res.token)
+          this.$notify({
+            title: 'Bingo',
+            message: '登陆成功啦！',
+            type: 'success'
+          })
         }
       })
     },
-    register() {
-    }
+    register() {}
   }
 }
 </script>

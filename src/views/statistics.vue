@@ -151,22 +151,22 @@
     >
       <template v-slot:item.immortals_text="{ item }">
         <v-chip-group column>
-          <v-chip
-            v-for="i in item.immortals_text"
-            :key="i.name"
-            :color="i.color"
-            text-color="white"
-          >{{i.name}}</v-chip>
+          <v-tooltip top v-for="i in item.immortals_text" :key="i.name">
+            <template v-slot:activator="{ on, attrs }">
+              <v-chip :color="i.color" text-color="white" v-bind="attrs" v-on="on">{{i.name}}</v-chip>
+            </template>
+            <span>{{i.position_text}}：{{i.description}}</span>
+          </v-tooltip>
         </v-chip-group>
       </template>
       <template v-slot:item.twotwo_text="{ item }">
         <v-chip-group column>
-          <v-chip
-            v-for="i in item.twotwo_text"
-            :key="i.name"
-            :color="i.color"
-            text-color="white"
-          >{{i.name}}</v-chip>
+          <v-tooltip top v-for="i in item.twotwo_text" :key="i.name">
+            <template v-slot:activator="{ on, attrs }">
+              <v-chip :color="i.color" text-color="white" v-bind="attrs" v-on="on">{{i.name}}</v-chip>
+            </template>
+            <span>{{i.position_text}}：{{i.description}}</span>
+          </v-tooltip>
         </v-chip-group>
       </template>
     </v-data-table>
@@ -296,6 +296,8 @@ export default {
           }
         })
         .catch(() => {
+          this.loading1 = false
+          this.dialog1 = false
           this.$notify({
             title: '出错啦！',
             message: '您没有权限这么做哦 (=´ω｀=)',
@@ -330,7 +332,7 @@ export default {
             }
           })
           .catch(err => {
-            console.log(err)
+            this.dialog2 = false
             this.loading2 = false
             this.$notify({
               title: '出错啦！',
