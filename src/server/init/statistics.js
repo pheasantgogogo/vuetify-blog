@@ -1,15 +1,21 @@
 const sequelize = require('../database/database')
+const Sequelize = require('sequelize')
 
-var Statistics = sequelize.define(
-  'immortal',
+var shining = sequelize.define(
+  'statistics',
   {
     id: {
       type: Sequelize.STRING(3),
       primaryKey: true
     },
-    name: Sequelize.STRING(255),
-    position: Sequelize.DOUBLE(2),
-    myth: Sequelize.DOUBLE(1),
+    userId: Sequelize.DOUBLE(2),
+    number: Sequelize.DOUBLE(2),
+    immortals: Sequelize.STRING(255),
+    twotwo: Sequelize.STRING(255),
+    time: Sequelize.STRING(255),
+    store: Sequelize.DOUBLE(2),
+    souls: Sequelize.DOUBLE(2),
+    createdAt: Sequelize.STRING
   },
   {
     timestamps: false,
@@ -17,5 +23,4 @@ var Statistics = sequelize.define(
   }
 )
 
-module.exports = Statistics
-
+module.exports = shining

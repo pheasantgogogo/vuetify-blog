@@ -1,7 +1,6 @@
-const router = require('koa-router')()
 const blog = require('../init/blog')
 
-router.get('/getBlog', async (ctx, next) => {
+let getBlog = async (ctx, next) => {
   await blog.findAll().then(res => {
     ctx.response.type = 'application/json'
     ctx.response.body = {
@@ -9,9 +8,9 @@ router.get('/getBlog', async (ctx, next) => {
       data: res
     }
   })
-})
+}
 
-router.get('/getSingleBlog', async (ctx, next) => {
+let getSingleBlog = async (ctx, next) => {
   await blog.findAll({
     where: urlSplit(ctx.request.url)
   }).then(res => {
@@ -21,9 +20,9 @@ router.get('/getSingleBlog', async (ctx, next) => {
       data: res[0]
     }
   })
-})
+}
 
-router.post('/postBlog', async (ctx, next) => {
+let postBlog = async (ctx, next) => {
   await blog.create({
     id: uuid.v1(),
     title: ctx.request.body.title,
@@ -36,4 +35,10 @@ router.post('/postBlog', async (ctx, next) => {
       result: true
     }
   })
-})
+}
+
+module.exports = {
+  'GET /getBlog': getBlog,
+  'GET /getSingleBlog': getSingleBlog,
+  'POST /postBlog': postBlog
+}

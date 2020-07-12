@@ -1,4 +1,5 @@
 const sequelize = require('../database/database')
+const Sequelize = require('sequelize')
 
 var User = sequelize.define(
   'user',

@@ -37,7 +37,7 @@
         </template>
 
         <v-card>
-          <v-card-title class="headline grey lighten-2" primary-title>添加记录</v-card-title>
+          <v-card-title class="headline grey lighten-2" primary-title>{{dialogTitle}}</v-card-title>
           <v-card-text>
             <v-form ref="form" v-model="valid" lazy-validation>
               <v-menu
@@ -142,34 +142,58 @@
         </v-card>
       </v-dialog>
     </div>
-    <v-data-table
-      :headers="headers"
-      :items="shiningList"
-      :items-per-page="15"
-      class="elevation-1"
-      style="margin-top:15px"
-    >
-      <template v-slot:item.immortals_text="{ item }">
-        <v-chip-group column>
-          <v-tooltip top v-for="i in item.immortals_text" :key="i.name">
-            <template v-slot:activator="{ on, attrs }">
-              <v-chip :color="i.color" text-color="white" v-bind="attrs" v-on="on">{{i.name}}</v-chip>
-            </template>
-            <span>{{i.position_text}}：{{i.description}}</span>
-          </v-tooltip>
-        </v-chip-group>
-      </template>
-      <template v-slot:item.twotwo_text="{ item }">
-        <v-chip-group column>
-          <v-tooltip top v-for="i in item.twotwo_text" :key="i.name">
-            <template v-slot:activator="{ on, attrs }">
-              <v-chip :color="i.color" text-color="white" v-bind="attrs" v-on="on">{{i.name}}</v-chip>
-            </template>
-            <span>{{i.position_text}}：{{i.description}}</span>
-          </v-tooltip>
-        </v-chip-group>
-      </template>
-    </v-data-table>
+    <v-card style="margin-top:15px">
+      <v-card-title>
+        Nutrition
+        <v-spacer></v-spacer>
+        <v-text-field
+          v-model="search"
+          append-icon="mdi-magnify"
+          label="Search"
+          single-line
+          hide-details
+        ></v-text-field>
+      </v-card-title>
+      <v-data-table
+        :headers="headers"
+        :items="shiningList"
+        :items-per-page="15"
+        class="elevation-1"
+        :search="search"
+        :footer-props="{
+          showFirstLastPage: true,
+          firstIcon: 'mdi-arrow-collapse-left',
+          lastIcon: 'mdi-arrow-collapse-right',
+          prevIcon: 'mdi-minus',
+          nextIcon: 'mdi-plus'
+        }"
+      >
+        <template v-slot:item.immortals_text="{ item }">
+          <v-chip-group column>
+            <v-tooltip top v-for="i in item.immortals_text" :key="i.name">
+              <template v-slot:activator="{ on, attrs }">
+                <v-chip :color="i.color" text-color="white" v-bind="attrs" v-on="on">{{i.name}}</v-chip>
+              </template>
+              <span>{{i.position_text}}：{{i.description}}</span>
+            </v-tooltip>
+          </v-chip-group>
+        </template>
+        <template v-slot:item.twotwo_text="{ item }">
+          <v-chip-group column>
+            <v-tooltip top v-for="i in item.twotwo_text" :key="i.name">
+              <template v-slot:activator="{ on, attrs }">
+                <v-chip :color="i.color" text-color="white" v-bind="attrs" v-on="on">{{i.name}}</v-chip>
+              </template>
+              <span>{{i.position_text}}：{{i.description}}</span>
+            </v-tooltip>
+          </v-chip-group>
+        </template>
+        <template v-slot:item.actions="{ item }">
+          <v-icon class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
+          <v-icon @click="deleteItem(item)">mdi-delete</v-icon>
+        </template>
+      </v-data-table>
+    </v-card>
     <notifications></notifications>
   </div>
 </template>
@@ -187,6 +211,8 @@ export default {
   name: 'statistics',
   data() {
     return {
+      editIndex: -1,
+      search: '',
       valid: true,
       dialog1: false,
       dialog2: false,
@@ -221,15 +247,28 @@ export default {
           value: 'userName',
           width: 80
         },
-        { text: '次数', value: 'number' },
-        { text: '史诗灵魂', value: 'souls' },
-        { text: '晶石', value: 'store' },
+        { text: '次数', width: 75, value: 'number' },
+        { text: '史诗灵魂', width: 100, value: 'souls' },
+        { text: '晶石', width: 75, value: 'store' },
         { text: '深渊', value: 'immortals_text' },
-        { text: '2+2', value: 'twotwo_text' }
+        { text: '2+2', value: 'twotwo_text' },
+        { text: '操作', width: 100, value: 'actions', sortable: false }
       ]
     }
   },
   methods: {
+    editItem(item) {
+      this.editIndex = this.shiningList.indexOf(item)
+      this.dialog2 = true
+      this.date = item.time
+      this.counter = item.number
+      this.souls = item.souls
+      this.store = item.store
+      this.userSelect = this.userList.find(v => v.id === item.userId)
+      this.itemSelect = item.immortals_text
+      this.twotwo = item.twotwo_text
+    },
+    deleteItem(item) {},
     getUserList() {
       getUserList().then(res => {
         if (res.result) {
@@ -341,6 +380,11 @@ export default {
             })
           })
       }
+    }
+  },
+  computed: {
+    dialogTitle() {
+      return this.editIndex === -1 ? '添加记录' : '修改记录'
     }
   },
   mounted() {

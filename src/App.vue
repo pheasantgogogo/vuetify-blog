@@ -11,7 +11,7 @@
             </v-list-item>
             <v-list-item link>
               <v-list-item-content>
-                <v-list-item-title class="title">王禄宏</v-list-item-title>
+                <v-list-item-title class="title">Pheasantgogogo</v-list-item-title>
                 <v-list-item-subtitle>66721860@163.com</v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>

@@ -1,14 +1,15 @@
 const sequelize = require('../database/database')
 const Sequelize = require('sequelize')
 
-var UserName = sequelize.define(
-  'username',
+var item_position = sequelize.define(
+  'item-position',
   {
     id: {
-      type: Sequelize.STRING(2),
+      type: Sequelize.STRING(3),
       primaryKey: true
     },
-    name: Sequelize.STRING(255)
+    position: Sequelize.STRING(255),
+    color: Sequelize.STRING(2)
   },
   {
     timestamps: false,
@@ -16,4 +17,4 @@ var UserName = sequelize.define(
   }
 )
 
-module.exports = UserName
+module.exports = item_position
