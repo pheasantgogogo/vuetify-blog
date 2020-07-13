@@ -1,7 +1,8 @@
 const user = require('../init/user')
+const jwt = require('jsonwebtoken')
 
 let login = async (ctx, next) => {
-  var response = await User.findAll({
+  var response = await user.findAll({
     where: {
       account: ctx.request.body.account
     }
@@ -29,7 +30,7 @@ let login = async (ctx, next) => {
 }
 
 let register = async (ctx, next) => {
-  var response = await User.findAll({
+  var response = await user.findAll({
     where: {
       account: ctx.request.body.account
     }

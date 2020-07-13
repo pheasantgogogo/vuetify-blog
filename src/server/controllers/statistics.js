@@ -42,7 +42,29 @@ let addShiningList = async (ctx, next) => {
   })
 }
 
+let updateShining = async (ctx, next) => {
+  await shining.findAll({
+    where: {
+      id: ctx.request.body.id
+    }
+  }).then(async res => {
+    await res[0].update({
+      userId: ctx.request.body.userId,
+      number: ctx.request.body.number,
+      souls: ctx.request.body.souls,
+      store: ctx.request.body.store,
+      immortals: ctx.request.body.immortals,
+      twotwo: ctx.request.body.twotwo,
+      time: ctx.request.body.time
+    })
+    ctx.response.type = 'application/json'
+    ctx.response.body = {
+      result: true
+    }
+  })
+}
 module.exports = {
   'GET /getShiningList': getShiningList,
-  'POST /addShiningList': addShiningList
+  'POST /addShiningList': addShiningList,
+  'POST /updateShining': updateShining
 }

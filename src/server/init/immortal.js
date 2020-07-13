@@ -11,6 +11,7 @@ var immortal = sequelize.define(
     name: Sequelize.STRING(255),
     position: Sequelize.DOUBLE(2),
     myth: Sequelize.DOUBLE(1),
+    description: Sequelize.STRING
   },
   {
     timestamps: false,

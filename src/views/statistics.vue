@@ -144,7 +144,7 @@
     </div>
     <v-card style="margin-top:15px">
       <v-card-title>
-        Nutrition
+        {{(totalShining / totalNumber * 100).toFixed(2)}}%({{totalShining}}/{{totalNumber}})
         <v-spacer></v-spacer>
         <v-text-field
           v-model="search"
@@ -204,13 +204,16 @@ import {
   addUser,
   getUserList,
   addShiningList,
-  getShiningList
+  getShiningList,
+  updateShining
 } from '../api/myapi'
 
 export default {
   name: 'statistics',
   data() {
     return {
+      totalNumber: 0,
+      totalShining: 0,
       editIndex: -1,
       search: '',
       valid: true,
@@ -249,9 +252,9 @@ export default {
         },
         { text: '次数', width: 75, value: 'number' },
         { text: '史诗灵魂', width: 100, value: 'souls' },
-        { text: '晶石', width: 75, value: 'store' },
-        { text: '深渊', value: 'immortals_text' },
-        { text: '2+2', value: 'twotwo_text' },
+        { text: '晶石', width: 75, value: 'store', divider: true },
+        { text: '深渊', value: 'immortals_text', divider: true },
+        { text: '2+2', value: 'twotwo_text', divider: true },
         { text: '操作', width: 100, value: 'actions', sortable: false }
       ]
     }
@@ -277,11 +280,15 @@ export default {
       })
     },
     getShiningList() {
+      this.totalNumber = 0
+      this.totalShining = 0
       getShiningList().then(res => {
         if (res.result) {
           for (let i = 0; i < res.data.length; i++) {
+            this.totalNumber += res.data[i].number
             res.data[i].immortals = JSON.parse(res.data[i].immortals)
             res.data[i].twotwo = JSON.parse(res.data[i].twotwo)
+            this.totalShining += res.data[i].immortals.length
             res.data[i].immortals_text = []
             res.data[i].twotwo_text = []
             for (let j = 0; j < res.data[i].immortals.length; j++) {
@@ -300,13 +307,16 @@ export default {
       })
     },
     resetDate() {
-      this.userSelect = ''
-      this.itemSelect = []
-      this.twotwo = []
-      this.souls = this.store = this.counter = ''
-      this.date = new Date().toISOString().substr(0, 10)
-      this.userName = ''
-      this.$refs.form.resetValidation()
+      this.$nextTick(function() {
+        this.editIndex = -1
+        this.userSelect = ''
+        this.itemSelect = []
+        this.twotwo = []
+        this.souls = this.store = this.counter = ''
+        this.date = new Date().toISOString().substr(0, 10)
+        this.userName = ''
+        this.$refs.form.resetValidation()
+      })
     },
     cancelAddUser() {
       this.dialog1 = false
@@ -347,38 +357,76 @@ export default {
     confirmAddList() {
       if (this.$refs.form.validate()) {
         this.loading2 = true
-        addShiningList({
-          time: this.date,
-          souls: this.souls,
-          store: this.store,
-          userId: this.userSelect.id,
-          immortals: JSON.stringify(this.itemSelect.map(v => v.id)),
-          twotwo: JSON.stringify(this.twotwo.map(v => v.id)),
-          number: this.counter
-        })
-          .then(res => {
-            this.loading2 = false
-            if (res.result) {
-              this.$notify({
-                title: '添加成功！',
-                message: '今天又是充满希望的一天！(ง •_•)ง',
-                type: 'success'
-              })
-              this.dialog2 = false
-              this.resetDate()
-              this.$refs.form.resetValidation()
-              this.getShiningList()
-            }
+        if (this.editIndex === -1) {
+          addShiningList({
+            time: this.date,
+            souls: this.souls,
+            store: this.store,
+            userId: this.userSelect.id,
+            immortals: JSON.stringify(this.itemSelect.map(v => v.id)),
+            twotwo: JSON.stringify(this.twotwo.map(v => v.id)),
+            number: this.counter
           })
-          .catch(err => {
-            this.dialog2 = false
-            this.loading2 = false
-            this.$notify({
-              title: '出错啦！',
-              message: '您没有权限这么做哦 (=´ω｀=)',
-              type: 'warning'
+            .then(res => {
+              this.loading2 = false
+              if (res.result) {
+                this.$notify({
+                  title: '添加成功！',
+                  message: '今天又是充满希望的一天！(ง •_•)ง',
+                  type: 'success'
+                })
+                this.dialog2 = false
+                this.resetDate()
+                this.$refs.form.resetValidation()
+                this.getShiningList()
+              }
             })
+            .catch(err => {
+              this.dialog2 = false
+              this.loading2 = false
+              this.$notify({
+                title: '出错啦！',
+                message: '您没有权限这么做哦 (=´ω｀=)',
+                type: 'warning'
+              })
+            })
+        } else {
+          const item = this.shiningList[this.editIndex]
+          updateShining({
+            id: item.id,
+            time: this.date,
+            souls: this.souls,
+            store: this.store,
+            userId: this.userSelect.id,
+            immortals: JSON.stringify(this.itemSelect.map(v => v.id)),
+            twotwo: JSON.stringify(this.twotwo.map(v => v.id)),
+            number: this.counter
           })
+            .then(res => {
+              this.loading2 = false
+              this.dialog2 = false
+              if (res.result) {
+                this.getShiningList()
+                this.$notify({
+                  title: '修改成功！',
+                  message: '今天又是充满希望的一天！(ง •_•)ง',
+                  type: 'success'
+                })
+                this.editIndex = -1
+              }
+            })
+            .catch(err => {
+              console.log(1, err)
+              this.$notify({
+                title: '出错啦！',
+                message: '您没有权限这么做哦 (=´ω｀=)',
+                type: 'warning'
+              })
+              this.loading2 = false
+              this.dialog2 = false
+              this.editIndex = -1
+            })
+        }
       }
     }
   },
@@ -391,27 +439,7 @@ export default {
     getItemList().then(res => {
       if (res.result) {
         this.itemList = res.data
-        getShiningList().then(res => {
-          if (res.result) {
-            for (let i = 0; i < res.data.length; i++) {
-              res.data[i].immortals = JSON.parse(res.data[i].immortals)
-              res.data[i].twotwo = JSON.parse(res.data[i].twotwo)
-              res.data[i].immortals_text = []
-              res.data[i].twotwo_text = []
-              for (let j = 0; j < res.data[i].immortals.length; j++) {
-                res.data[i].immortals_text.push(
-                  this.itemList.find(v => v.id === res.data[i].immortals[j])
-                )
-              }
-              for (let j = 0; j < res.data[i].twotwo.length; j++) {
-                res.data[i].twotwo_text.push(
-                  this.itemList.find(v => v.id === res.data[i].twotwo[j])
-                )
-              }
-            }
-            this.shiningList = res.data
-          }
-        })
+        this.getShiningList()
       }
     })
     getUserList().then(res => {

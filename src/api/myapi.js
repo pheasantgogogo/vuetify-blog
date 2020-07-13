@@ -80,3 +80,11 @@ export function getShiningList(params) {
     params: params
   })
 }
+
+export function updateShining(params) {
+  return request({
+    method: 'Post',
+    url: currentUrl + '/updateShining',
+    params: params
+  })
+}

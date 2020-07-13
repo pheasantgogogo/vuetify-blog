@@ -1,7 +1,6 @@
 const Sequelize = require('sequelize')
 const Koa = require('koa')
 // const WebSocket = require('ws')
-const jwt = require('jsonwebtoken')
 const koajwt = require('koa-jwt')
 // const WebSocketServer = WebSocket.Server
 const urlSplit = require('./utils/urlSplit')
