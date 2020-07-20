@@ -169,7 +169,9 @@
         }"
       >
         <template v-slot:item.userName="{ item }">
-          <span>{{item.userName}}</span>
+          <span
+            :style="item.immortals_text.length === 0 && item.twotwo_text.length === 0 ? 'color:red' : ''"
+          >{{item.userName}}</span>
         </template>
         <template v-slot:item.immortals_text="{ item }">
           <v-chip-group column>
