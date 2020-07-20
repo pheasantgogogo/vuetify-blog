@@ -148,8 +148,8 @@
         <v-spacer></v-spacer>
         <v-text-field
           v-model="search"
-          append-icon="mdi-magnify"
-          label="Search"
+          prepend-inner-icon="mdi-magnify"
+          label="日期/角色..."
           single-line
           hide-details
         ></v-text-field>
@@ -168,13 +168,27 @@
           nextIcon: 'mdi-plus'
         }"
       >
+        <template v-slot:item.userName="{ item }">
+          <span>{{item.userName}}</span>
+        </template>
         <template v-slot:item.immortals_text="{ item }">
           <v-chip-group column>
-            <v-tooltip top v-for="i in item.immortals_text" :key="i.name">
+            <v-tooltip top v-for="i in item.immortals_text" :key="i.name" nudge-bottom="3">
               <template v-slot:activator="{ on, attrs }">
-                <v-chip :color="i.color" text-color="white" v-bind="attrs" v-on="on">{{i.name}}</v-chip>
+                <v-chip
+                  :color="i.color"
+                  :text-color="i.myth ? i.color : 'white'"
+                  v-bind="attrs"
+                  v-on="on"
+                  :outlined="!!i.myth"
+                >
+                  <span>{{i.name}}</span>
+                  <v-icon v-if="i.myth" right>mdi-emoticon-poop</v-icon>
+                </v-chip>
               </template>
-              <span>{{i.position_text}}：{{i.description}}</span>
+              <span
+                :style="i.myth ? 'background-image: -webkit-linear-gradient(bottom, rgb(182, 124, 200), rgb(234, 189, 104)); -webkit-background-clip: text;-webkit-text-fill-color: transparent;': ''"
+              >{{i.position_text}}：{{i.description}}</span>
             </v-tooltip>
           </v-chip-group>
         </template>
