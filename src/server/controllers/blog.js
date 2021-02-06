@@ -1,4 +1,5 @@
 const blog = require('../init/blog')
+const urlSplit = require('../utils/urlSplit')
 
 let getBlog = async (ctx, next) => {
   await blog.findAll().then(res => {

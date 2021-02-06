@@ -9,17 +9,21 @@ let getShiningList = async (ctx, next) => {
     data = JSON.parse(JSON.stringify(res))
   })
   await userName.findAll().then(res => {
-    for (let i = 0; i < data.length; i++) {
-      for (let j = 0; j < res.length; j++) {
+    let staData = []
+    for (let j = 0; j < res.length; j++) {
+      staData.push({ ['id' + res[j].id]: 0 })
+      for (let i = 0; i < data.length; i++) {
         if (data[i].userId === res[j].id) {
           data[i].userName = res[j].name
+          staData[staData.length - 1]['id' + res[j].id] += data[i].number
         }
       }
     }
     ctx.response.type = 'application/json'
     ctx.response.body = {
       result: true,
-      data: data
+      data: data,
+      staData: staData
     }
   })
 }

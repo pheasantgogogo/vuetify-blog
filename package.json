@@ -12,6 +12,7 @@
     "@tinymce/tinymce-vue": "^3.2.1",
     "axios": "^0.19.2",
     "core-js": "^3.6.4",
+    "echarts": "^4.8.0",
     "jsonwebtoken": "^8.5.1",
     "koa": "^2.11.0",
     "koa-bodyparser": "^4.3.0",
@@ -30,6 +31,7 @@
     "sequelize": "^5.21.8",
     "tinymce": "^5.2.2",
     "vue": "^2.6.11",
+    "vue-echarts": "^5.0.0-beta.0",
     "vue-notifyjs": "^0.4.3",
     "vue-router": "^3.1.6",
     "vuetify": "^2.2.11"
