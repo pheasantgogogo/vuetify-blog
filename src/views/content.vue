@@ -2,7 +2,12 @@
   <div>
     <v-row>
       <v-col cols="12">
-        <v-text-field label="标题" outlined v-model="title" :rules="[rules.required]"></v-text-field>
+        <v-text-field
+          label="标题"
+          outlined
+          v-model="title"
+          :rules="[rules.required]"
+        ></v-text-field>
         <div class="tinymce-editor">
           <editor v-model="myValue" :init="init" id="editor"></editor>
         </div>
@@ -42,7 +47,7 @@ export default {
       title: '',
       data: '',
       rules: {
-        required: value => !!value || '请输入标题'
+        required: (value) => !!value || '请输入标题'
       },
       init: {
         language_url: `/tinymce/langs/zh_CN.js`,
@@ -50,7 +55,8 @@ export default {
         skin_url: `/tinymce/skins/ui/oxide`,
         content_css: `/tinymce/skins/content/default/content.css`,
         height: window.innerHeight - 120,
-        plugins: 'image media table lists wordcount codesample preview emoticons save',
+        plugins:
+          'image media table lists wordcount codesample preview emoticons save',
         toolbar:
           'preview save undo redo |  formatselect | bold italic forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | lists image media table codesample | emoticons removeformat',
         branding: true,
@@ -67,14 +73,17 @@ export default {
             postBlog({
               content: this.myValue,
               title: this.title
-            }).then(res => {
+            }).then((res) => {
               if (res.result) {
                 this.myValue = this.title = ''
               }
             })
           }
         },
-        emoticons_database_url: process.env.NODE_ENV === 'product' ? 'https://wangluhong.cn/tinymce/plugins/emoticons/js/emojis.js' : 'http://localhost:8080/tinymce/plugins/emoticons/js/emojis.js'
+        emoticons_database_url:
+          process.env.NODE_ENV === 'production'
+            ? 'https://wangluhong.cn/tinymce/plugins/emoticons/js/emojis.js'
+            : 'http://localhost:8080/tinymce/plugins/emoticons/js/emojis.js'
       }
     }
   },
@@ -83,12 +92,12 @@ export default {
       postBlog({
         content: this.myValue,
         title: this.title
-      }).then(res => {
+      }).then((res) => {
         console.log(res.data)
       })
     },
     getBlog() {
-      getBlogList().then(res => {
+      getBlogList().then((res) => {
         console.log(res.data)
         this.data = res.data.content
       })
@@ -107,7 +116,6 @@ export default {
       }
       return ''
     }
-
   }
 }
 </script>

@@ -13,7 +13,7 @@ let login = async (ctx, next) => {
         id: response[0].id
       },
       'wlh_token',
-      { expiresIn: '2h' }
+      { expiresIn: '7d' }
     )
     ctx.response.type = 'application/json'
     ctx.response.body =
@@ -41,7 +41,7 @@ let register = async (ctx, next) => {
         id: response[0].id
       },
       'wlh_token',
-      { expiresIn: '2h' }
+      { expiresIn: '7d' }
     )
     ctx.response.type = 'application/json'
     ctx.response.body =

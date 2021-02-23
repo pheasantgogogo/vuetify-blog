@@ -270,7 +270,7 @@
         </template>
       </v-data-table>
     </v-card>
-    <v-card height="1250">
+    <v-card height="1250" v-if="false">
       <v-card-title>Some useless data</v-card-title>
       <v-charts :options="options" ref="sumPriceData"></v-charts>
       <v-charts :options="option" ref="sumPriceData"></v-charts>
